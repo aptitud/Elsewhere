@@ -6,10 +6,13 @@ require("./store/messagestore");
 var React = require('react');
 var Discussion = require('./components/discussion');
 
+// Snag the initial state that was passed from the server side
+var initialState = JSON.parse(document.getElementById('initial-state').innerHTML)
+
 $(function() {
 
 	React.renderComponent(
-		Discussion(null),
+		Discussion({messages: initialState}),
 		$("#app")[0]);
 
 });
@@ -22,40 +25,14 @@ var _ = require('underscore');
 var dispatcher = require('../dispatcher');
 
 module.exports = React.createClass( {displayName: 'exports',
-
 	getInitialState: function() {
 		return {
-			id : 1,
-			messages: [
-				{
-					timestamp: '2015-05-22T10:00:00',
-					author: {
-						id: 'PeterQwarnstrom',
-						name: 'Peter Qwärnström'
-					},
-					content: 'Hello message!'
-				},
-				{
-					timestamp: '2015-05-22T10:01:00',
-					author: {
-						id: '_asa',
-						name: 'Åsa Liljegren'
-					},
-					content: 'Hello message 2!'
-				},
-				{
-					timestamp: '2015-05-22T10:02:00',
-					author: {
-						id: 'perjansson',
-						name: 'Per Jansson'
-					},
-					content: 'Hello message 3!'
-				}
-			]
+			messages: this.props.messages
 		}
 	},
 	renderMessages: function() {
 		return _.map(this.state.messages, function(message) {
+		console.log("renderMessages: " + JSON.stringify(message));
 			return MessageItem({data: message});
 		});
 	},
@@ -65,8 +42,11 @@ module.exports = React.createClass( {displayName: 'exports',
 				id: '@_asa',
 				name: 'Åsa Liljegren'
 			},
-			content: content
+			content: content,
+			timestamp: new Date().toString()
 		};
+		this.state.messages.unshift(message);
+		this.setState({messages: this.state.messages});
 		dispatcher.dispatch({type: 'CreateMessage', message: message});
 	},
 	render: function (){
