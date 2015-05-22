@@ -10,14 +10,10 @@ module.exports = React.createClass({
 	},
 	render: function () {
 		return (
-			<form className="form clearfix" onSubmit={this.handleSubmit}>
+			<form className="form messageform clearfix" onSubmit={this.handleSubmit}>
 				<div className="form-group">
-					<div className="input-group">
-						<textarea className="form-control" id="content" rows="3"/>
-						<span className="input-group-btn">
-							<button type="submit" className="btn btn-primary">Post</button>
-						</span>
-					</div>
+					<textarea className="form-control" id="content" rows="5"/>
+					<button type="submit" className="btn btn-lg btn-default pull-right">Post</button>
 				</div>
 			</form>
 		);
