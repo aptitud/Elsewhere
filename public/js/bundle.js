@@ -16,7 +16,7 @@ $(function() {
 },{"./components/discussion":"/Users/PJ/Jobb/Code/Elsewhere/app/components/discussion.js","./store/messagestore":"/Users/PJ/Jobb/Code/Elsewhere/app/store/messagestore.js","react":"/Users/PJ/Jobb/Code/Elsewhere/node_modules/react/react.js"}],"/Users/PJ/Jobb/Code/Elsewhere/app/components/discussion.js":[function(require,module,exports){
 /** @jsx React.DOM */
 var React = require('react');
-var Post = require('./post');
+var MessageItem = require('./messageitem');
 var MessageForm = require('./messageform');
 var _ = require('underscore');
 var dispatcher = require('../dispatcher');
@@ -26,14 +26,14 @@ module.exports = React.createClass( {displayName: 'exports',
 	getInitialState: function() {
 		return {
 			id : 1,
-			posts: [
+			messages: [
 				{
 					timestamp: '2015-05-22T10:00:00',
 					author: {
 						id: 'PeterQwarnstrom',
 						name: 'Peter Qwärnström'
 					},
-					message: 'Hello message!'
+					content: 'Hello message!'
 				},
 				{
 					timestamp: '2015-05-22T10:01:00',
@@ -41,7 +41,7 @@ module.exports = React.createClass( {displayName: 'exports',
 						id: '_asa',
 						name: 'Åsa Liljegren'
 					},
-					message: 'Hello message 2!'
+					content: 'Hello message 2!'
 				},
 				{
 					timestamp: '2015-05-22T10:02:00',
@@ -49,26 +49,25 @@ module.exports = React.createClass( {displayName: 'exports',
 						id: 'perjansson',
 						name: 'Per Jansson'
 					},
-					message: 'Hello message 3!'
+					content: 'Hello message 3!'
 				}
 			]
 		}
 	},
-	renderPosts: function() {
-		return _.map(this.state.posts, function(post) {
-			return Post({post: post});
+	renderMessages: function() {
+		return _.map(this.state.messages, function(message) {
+			return MessageItem({data: message});
 		});
 	},
-	handleMessage: function(message) {
-		console.log(message);
-		var post = {
+	handleMessage: function(content) {
+		var message = {
 			author: { 
 				id: '@_asa',
 				name: 'Åsa Liljegren'
 			},
-			message: message
+			content: content
 		};
-		dispatcher.dispatch({type: 'CreateMessage', post: post});
+		dispatcher.dispatch({type: 'CreateMessage', message: message});
 	},
 	render: function (){
 		return (
@@ -78,30 +77,29 @@ module.exports = React.createClass( {displayName: 'exports',
 				), 				
 				React.DOM.ul({className: "list-group"}, 
 					React.DOM.li({className: "list-group-item pointer"}, MessageForm({handleMessage: this.handleMessage})), 
-					this.renderPosts()
+					this.renderMessages()
 				)
 			)
 			);
 	}
 })
-},{"../dispatcher":"/Users/PJ/Jobb/Code/Elsewhere/app/dispatcher.js","./messageform":"/Users/PJ/Jobb/Code/Elsewhere/app/components/messageform.js","./post":"/Users/PJ/Jobb/Code/Elsewhere/app/components/post.js","react":"/Users/PJ/Jobb/Code/Elsewhere/node_modules/react/react.js","underscore":"/Users/PJ/Jobb/Code/Elsewhere/node_modules/underscore/underscore.js"}],"/Users/PJ/Jobb/Code/Elsewhere/app/components/messageform.js":[function(require,module,exports){
+},{"../dispatcher":"/Users/PJ/Jobb/Code/Elsewhere/app/dispatcher.js","./messageform":"/Users/PJ/Jobb/Code/Elsewhere/app/components/messageform.js","./messageitem":"/Users/PJ/Jobb/Code/Elsewhere/app/components/messageitem.js","react":"/Users/PJ/Jobb/Code/Elsewhere/node_modules/react/react.js","underscore":"/Users/PJ/Jobb/Code/Elsewhere/node_modules/underscore/underscore.js"}],"/Users/PJ/Jobb/Code/Elsewhere/app/components/messageform.js":[function(require,module,exports){
 /** @jsx React.DOM */
 var React = require('react');
 
 module.exports = React.createClass({displayName: 'exports',
 	handleSubmit: function(e) {
 		e.preventDefault();
-		var messageInput = $('#message');
-		this.props.handleMessage(messageInput.val());
-		messageInput.val("");
+		var contentInput = $('#content');
+		this.props.handleMessage(contentInput.val());
+		contentInput.val("");
 	},
 	render: function () {
 		return (
 			React.DOM.form({className: "form clearfix", onSubmit: this.handleSubmit}, 
 				React.DOM.div({className: "form-group"}, 
-					React.DOM.label({htmlFor: "message"}, "Message"), 
 					React.DOM.div({className: "input-group"}, 
-						React.DOM.textarea({className: "form-control", id: "message", rows: "3"}), 
+						React.DOM.textarea({className: "form-control", id: "content", rows: "3"}), 
 						React.DOM.span({className: "input-group-btn"}, 
 							React.DOM.button({type: "submit", className: "btn btn-primary"}, "Post")
 						)
@@ -112,7 +110,7 @@ module.exports = React.createClass({displayName: 'exports',
 	}
 
 });
-},{"react":"/Users/PJ/Jobb/Code/Elsewhere/node_modules/react/react.js"}],"/Users/PJ/Jobb/Code/Elsewhere/app/components/post.js":[function(require,module,exports){
+},{"react":"/Users/PJ/Jobb/Code/Elsewhere/node_modules/react/react.js"}],"/Users/PJ/Jobb/Code/Elsewhere/app/components/messageitem.js":[function(require,module,exports){
 /** @jsx React.DOM */
 var React = require('react');
 
@@ -120,9 +118,9 @@ module.exports = React.createClass({displayName: 'exports',
 
 	render: function (){
 		return (
-			React.DOM.li({className: "list-group-item pointer"}, 
-				React.DOM.div({className: "postheader"}, this.props.post.author.name, " (", this.props.post.author.id, "), ", this.props.post.timestamp), 
-				React.DOM.div({className: "postybody"}, this.props.post.message)
+			React.DOM.li({className: "list-group-item pointer messageitem"}, 
+				React.DOM.div({className: "header"}, this.props.data.author.name, " (", this.props.data.author.id, "), ", this.props.data.timestamp), 
+				React.DOM.div({className: "body"}, this.props.data.content)
 			)
 		);
 	}
@@ -144,14 +142,14 @@ var MessageStore = function() {
 	dispatcher.register(function(payload) {
 		switch (payload.type) {
 			case "CreateMessage":
-				this.createPost(payload.post);
+				this.createMessage(payload.message);
 				break;
 		}
 	}.bind(this));
 
-	this.createPost = function(post) {
-		console.log("Creating " + JSON.stringify(post));
-		$.post('/api/discussions/' + '1' + '/messages', post);
+	this.createMessage = function(message) {
+		console.log("Creating " + JSON.stringify(message));
+		$.post('/api/discussions/' + '1' + '/messages', message);
 	}
 
 }

@@ -1,6 +1,6 @@
 /** @jsx React.DOM */
 var React = require('react');
-var Post = require('./post');
+var MessageItem = require('./messageitem');
 var MessageForm = require('./messageform');
 var _ = require('underscore');
 var dispatcher = require('../dispatcher');
@@ -10,14 +10,14 @@ module.exports = React.createClass( {
 	getInitialState: function() {
 		return {
 			id : 1,
-			posts: [
+			messages: [
 				{
 					timestamp: '2015-05-22T10:00:00',
 					author: {
 						id: 'PeterQwarnstrom',
 						name: 'Peter Qwärnström'
 					},
-					message: 'Hello message!'
+					content: 'Hello message!'
 				},
 				{
 					timestamp: '2015-05-22T10:01:00',
@@ -25,7 +25,7 @@ module.exports = React.createClass( {
 						id: '_asa',
 						name: 'Åsa Liljegren'
 					},
-					message: 'Hello message 2!'
+					content: 'Hello message 2!'
 				},
 				{
 					timestamp: '2015-05-22T10:02:00',
@@ -33,26 +33,25 @@ module.exports = React.createClass( {
 						id: 'perjansson',
 						name: 'Per Jansson'
 					},
-					message: 'Hello message 3!'
+					content: 'Hello message 3!'
 				}
 			]
 		}
 	},
-	renderPosts: function() {
-		return _.map(this.state.posts, function(post) {
-			return <Post post={post} />;
+	renderMessages: function() {
+		return _.map(this.state.messages, function(message) {
+			return <MessageItem data={message} />;
 		});
 	},
-	handleMessage: function(message) {
-		console.log(message);
-		var post = {
+	handleMessage: function(content) {
+		var message = {
 			author: { 
 				id: '@_asa',
 				name: 'Åsa Liljegren'
 			},
-			message: message
+			content: content
 		};
-		dispatcher.dispatch({type: 'CreateMessage', post: post});
+		dispatcher.dispatch({type: 'CreateMessage', message: message});
 	},
 	render: function (){
 		return (
@@ -62,7 +61,7 @@ module.exports = React.createClass( {
 				</div>				
 				<ul className="list-group">
 					<li className="list-group-item pointer"><MessageForm handleMessage={this.handleMessage} /></li>
-					{this.renderPosts()}
+					{this.renderMessages()}
 				</ul>
 			</div>
 			);

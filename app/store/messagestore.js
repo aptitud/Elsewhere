@@ -6,14 +6,14 @@ var MessageStore = function() {
 	dispatcher.register(function(payload) {
 		switch (payload.type) {
 			case "CreateMessage":
-				this.createPost(payload.post);
+				this.createMessage(payload.message);
 				break;
 		}
 	}.bind(this));
 
-	this.createPost = function(post) {
-		console.log("Creating " + JSON.stringify(post));
-		$.post('/api/discussions/' + '1' + '/messages', post);
+	this.createMessage = function(message) {
+		console.log("Creating " + JSON.stringify(message));
+		$.post('/api/discussions/' + '1' + '/messages', message);
 	}
 
 }

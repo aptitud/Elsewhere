@@ -9,10 +9,6 @@ body {
 	color: white;
 }
 
-.postheader {
-	color: grey;
-};
-
-.postbody {
-
+.messageitem .header {
+	color: gray;
 }
