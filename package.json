@@ -1,0 +1,36 @@
+{
+  "name": "elsewhere-client",
+  "version": "0.0.1",
+  "main": "app/app.js",
+  "scripts": {
+    "watch": "watchify app/app.js -o public/js/bundle.js -v",
+    "browserify": "browserify app/app.js | uglifyjs > public/js/bundle.js",
+    "build": "npm run browserify",
+    "start": "npm run watch & nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aptitud/Elsewhere.git"
+  },
+  "dependencies": {
+    "express": "~4.9.7",
+    "react": "~0.11.2",
+    "flux": "2.0.3",
+    "event-emitter": "0.3.3",
+    "node-jsx": "~0.11.0",
+    "underscore": "^1.6.0",
+    "request": "2.55.0"
+  },
+  "devDependencies": {
+    "browserify": "~6.0.3",
+    "nodemon": "^1.2.1",
+    "reactify": "~0.14.0",
+    "uglify-js": "~2.4.15",
+    "watchify": "~2.0.0"
+  },
+  "browserify" : {
+    "transform" : [
+      "reactify"
+    ]
+  }
+}
