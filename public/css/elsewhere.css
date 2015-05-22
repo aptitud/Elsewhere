@@ -1,0 +1,18 @@
+body {
+	margin-top: 10px;
+	background-image: url('background.jpg');
+
+}
+
+.discussion .jumbotron {
+	background-color: rgb(238,85,85);
+	color: white;
+}
+
+.postheader {
+	color: grey;
+};
+
+.postbody {
+
+}

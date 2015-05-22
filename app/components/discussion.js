@@ -1,6 +1,7 @@
 /** @jsx React.DOM */
 var React = require('react');
 var Post = require('./post');
+var MessageForm = require('./messageform');
 var _ = require('underscore');
 
 module.exports = React.createClass( {
@@ -29,15 +30,23 @@ module.exports = React.createClass( {
 	},
 	renderPosts: function() {
 		return _.map(this.state.posts, function(post) {
-			return <Post message={post.message} />;
+			return <Post post={post} />;
 		});
 	},
-
+	handleMessage: function(message) {
+		console.log(message);
+	},
 	render: function (){
 		return (
-			<ul>
-				{this.renderPosts()}
-			</ul>
+			<div className="discussion">
+				<div className="jumbotron">
+					<h1>Discussion ({this.state.id})</h1>
+				</div>				
+				<ul className="list-group">
+					<li className="list-group-item pointer"><MessageForm handleMessage={this.handleMessage} /></li>
+					{this.renderPosts()}
+				</ul>
+			</div>
 			);
 	}
 })

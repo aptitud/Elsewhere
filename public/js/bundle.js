@@ -15,6 +15,7 @@ $(function() {
 /** @jsx React.DOM */
 var React = require('react');
 var Post = require('./post');
+var MessageForm = require('./messageform');
 var _ = require('underscore');
 
 module.exports = React.createClass( {displayName: 'exports',
@@ -43,26 +44,67 @@ module.exports = React.createClass( {displayName: 'exports',
 	},
 	renderPosts: function() {
 		return _.map(this.state.posts, function(post) {
-			return Post({message: post.message});
+			return Post({post: post});
 		});
 	},
-
+	handleMessage: function(message) {
+		console.log(message);
+	},
 	render: function (){
 		return (
-			React.DOM.ul(null, 
-				this.renderPosts()
+			React.DOM.div({className: "discussion"}, 
+				React.DOM.div({className: "jumbotron"}, 
+					React.DOM.h1(null, "Discussion (", this.state.id, ")")
+				), 				
+				React.DOM.ul({className: "list-group"}, 
+					React.DOM.li({className: "list-group-item pointer"}, MessageForm({handleMessage: this.handleMessage})), 
+					this.renderPosts()
+				)
 			)
 			);
 	}
 })
-},{"./post":"/Users/PJ/Jobb/Code/Elsewhere/app/components/post.js","react":"/Users/PJ/Jobb/Code/Elsewhere/node_modules/react/react.js","underscore":"/Users/PJ/Jobb/Code/Elsewhere/node_modules/underscore/underscore.js"}],"/Users/PJ/Jobb/Code/Elsewhere/app/components/post.js":[function(require,module,exports){
+},{"./messageform":"/Users/PJ/Jobb/Code/Elsewhere/app/components/messageform.js","./post":"/Users/PJ/Jobb/Code/Elsewhere/app/components/post.js","react":"/Users/PJ/Jobb/Code/Elsewhere/node_modules/react/react.js","underscore":"/Users/PJ/Jobb/Code/Elsewhere/node_modules/underscore/underscore.js"}],"/Users/PJ/Jobb/Code/Elsewhere/app/components/messageform.js":[function(require,module,exports){
+/** @jsx React.DOM */
+var React = require('react');
+
+module.exports = React.createClass({displayName: 'exports',
+	handleSubmit: function(e) {
+		e.preventDefault();
+		var messageInput = $('#message');
+		this.props.handleMessage(messageInput.val());
+		messageInput.val("");
+	},
+	render: function () {
+		return (
+			React.DOM.form({className: "form clearfix", onSubmit: this.handleSubmit}, 
+				React.DOM.div({className: "form-group"}, 
+					React.DOM.label({htmlFor: "message"}, "Message"), 
+					React.DOM.div({className: "input-group"}, 
+						React.DOM.textarea({className: "form-control", id: "message", rows: "3"}), 
+						React.DOM.span({className: "input-group-btn"}, 
+							React.DOM.button({type: "submit", className: "btn btn-primary"}, "Post")
+						)
+					)
+				)
+			)
+		);
+	}
+
+});
+},{"react":"/Users/PJ/Jobb/Code/Elsewhere/node_modules/react/react.js"}],"/Users/PJ/Jobb/Code/Elsewhere/app/components/post.js":[function(require,module,exports){
 /** @jsx React.DOM */
 var React = require('react');
 
 module.exports = React.createClass({displayName: 'exports',
 
 	render: function (){
-		return React.DOM.li(null, this.props.message);
+		return (
+			React.DOM.li({className: "list-group-item pointer"}, 
+				React.DOM.div({className: "postheader"}, this.props.post.author, ", ", this.props.post.timestamp), 
+				React.DOM.div({className: "postybody"}, this.props.post.message)
+			)
+		);
 	}
 });
 },{"react":"/Users/PJ/Jobb/Code/Elsewhere/node_modules/react/react.js"}],"/Users/PJ/Jobb/Code/Elsewhere/node_modules/react/lib/AutoFocusMixin.js":[function(require,module,exports){
