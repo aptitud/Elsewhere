@@ -3,6 +3,7 @@ var React = require('react');
 var Post = require('./post');
 var MessageForm = require('./messageform');
 var _ = require('underscore');
+var dispatcher = require('../dispatcher');
 
 module.exports = React.createClass( {
 
@@ -12,17 +13,26 @@ module.exports = React.createClass( {
 			posts: [
 				{
 					timestamp: '2015-05-22T10:00:00',
-					author: '@PeterQwarnstrom',
+					author: {
+						id: 'PeterQwarnstrom',
+						name: 'Peter Qwärnström'
+					},
 					message: 'Hello message!'
 				},
 				{
 					timestamp: '2015-05-22T10:01:00',
-					author: '@_asa',
+					author: {
+						id: '_asa',
+						name: 'Åsa Liljegren'
+					},
 					message: 'Hello message 2!'
 				},
 				{
 					timestamp: '2015-05-22T10:02:00',
-					author: '@perjansson',
+					author: {
+						id: 'perjansson',
+						name: 'Per Jansson'
+					},
 					message: 'Hello message 3!'
 				}
 			]
@@ -35,6 +45,14 @@ module.exports = React.createClass( {
 	},
 	handleMessage: function(message) {
 		console.log(message);
+		var post = {
+			author: { 
+				id: '@_asa',
+				name: 'Åsa Liljegren'
+			},
+			message: message
+		};
+		dispatcher.dispatch({type: 'CreateMessage', post: post});
 	},
 	render: function (){
 		return (

@@ -1,6 +1,8 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"/Users/PJ/Jobb/Code/Elsewhere/app/app.js":[function(require,module,exports){
 /** @jsx React.DOM */
 
+require("./store/messagestore");
+
 var React = require('react');
 var Discussion = require('./components/discussion');
 
@@ -11,12 +13,13 @@ $(function() {
 		$("#app")[0]);
 
 });
-},{"./components/discussion":"/Users/PJ/Jobb/Code/Elsewhere/app/components/discussion.js","react":"/Users/PJ/Jobb/Code/Elsewhere/node_modules/react/react.js"}],"/Users/PJ/Jobb/Code/Elsewhere/app/components/discussion.js":[function(require,module,exports){
+},{"./components/discussion":"/Users/PJ/Jobb/Code/Elsewhere/app/components/discussion.js","./store/messagestore":"/Users/PJ/Jobb/Code/Elsewhere/app/store/messagestore.js","react":"/Users/PJ/Jobb/Code/Elsewhere/node_modules/react/react.js"}],"/Users/PJ/Jobb/Code/Elsewhere/app/components/discussion.js":[function(require,module,exports){
 /** @jsx React.DOM */
 var React = require('react');
 var Post = require('./post');
 var MessageForm = require('./messageform');
 var _ = require('underscore');
+var dispatcher = require('../dispatcher');
 
 module.exports = React.createClass( {displayName: 'exports',
 
@@ -26,17 +29,26 @@ module.exports = React.createClass( {displayName: 'exports',
 			posts: [
 				{
 					timestamp: '2015-05-22T10:00:00',
-					author: '@PeterQwarnstrom',
+					author: {
+						id: 'PeterQwarnstrom',
+						name: 'Peter Qwärnström'
+					},
 					message: 'Hello message!'
 				},
 				{
 					timestamp: '2015-05-22T10:01:00',
-					author: '@_asa',
+					author: {
+						id: '_asa',
+						name: 'Åsa Liljegren'
+					},
 					message: 'Hello message 2!'
 				},
 				{
 					timestamp: '2015-05-22T10:02:00',
-					author: '@perjansson',
+					author: {
+						id: 'perjansson',
+						name: 'Per Jansson'
+					},
 					message: 'Hello message 3!'
 				}
 			]
@@ -49,6 +61,14 @@ module.exports = React.createClass( {displayName: 'exports',
 	},
 	handleMessage: function(message) {
 		console.log(message);
+		var post = {
+			author: { 
+				id: '@_asa',
+				name: 'Åsa Liljegren'
+			},
+			message: message
+		};
+		dispatcher.dispatch({type: 'CreateMessage', post: post});
 	},
 	render: function (){
 		return (
@@ -64,7 +84,7 @@ module.exports = React.createClass( {displayName: 'exports',
 			);
 	}
 })
-},{"./messageform":"/Users/PJ/Jobb/Code/Elsewhere/app/components/messageform.js","./post":"/Users/PJ/Jobb/Code/Elsewhere/app/components/post.js","react":"/Users/PJ/Jobb/Code/Elsewhere/node_modules/react/react.js","underscore":"/Users/PJ/Jobb/Code/Elsewhere/node_modules/underscore/underscore.js"}],"/Users/PJ/Jobb/Code/Elsewhere/app/components/messageform.js":[function(require,module,exports){
+},{"../dispatcher":"/Users/PJ/Jobb/Code/Elsewhere/app/dispatcher.js","./messageform":"/Users/PJ/Jobb/Code/Elsewhere/app/components/messageform.js","./post":"/Users/PJ/Jobb/Code/Elsewhere/app/components/post.js","react":"/Users/PJ/Jobb/Code/Elsewhere/node_modules/react/react.js","underscore":"/Users/PJ/Jobb/Code/Elsewhere/node_modules/underscore/underscore.js"}],"/Users/PJ/Jobb/Code/Elsewhere/app/components/messageform.js":[function(require,module,exports){
 /** @jsx React.DOM */
 var React = require('react');
 
@@ -101,13 +121,697 @@ module.exports = React.createClass({displayName: 'exports',
 	render: function (){
 		return (
 			React.DOM.li({className: "list-group-item pointer"}, 
-				React.DOM.div({className: "postheader"}, this.props.post.author, ", ", this.props.post.timestamp), 
+				React.DOM.div({className: "postheader"}, this.props.post.author.name, " (", this.props.post.author.id, "), ", this.props.post.timestamp), 
 				React.DOM.div({className: "postybody"}, this.props.post.message)
 			)
 		);
 	}
 });
-},{"react":"/Users/PJ/Jobb/Code/Elsewhere/node_modules/react/react.js"}],"/Users/PJ/Jobb/Code/Elsewhere/node_modules/react/lib/AutoFocusMixin.js":[function(require,module,exports){
+},{"react":"/Users/PJ/Jobb/Code/Elsewhere/node_modules/react/react.js"}],"/Users/PJ/Jobb/Code/Elsewhere/app/dispatcher.js":[function(require,module,exports){
+var Dispatcher = require("flux").Dispatcher;
+
+module.exports = new Dispatcher();
+},{"flux":"/Users/PJ/Jobb/Code/Elsewhere/node_modules/flux/index.js"}],"/Users/PJ/Jobb/Code/Elsewhere/app/emitter.js":[function(require,module,exports){
+var ee = require("event-emitter");
+
+module.exports = ee();
+},{"event-emitter":"/Users/PJ/Jobb/Code/Elsewhere/node_modules/event-emitter/index.js"}],"/Users/PJ/Jobb/Code/Elsewhere/app/store/messagestore.js":[function(require,module,exports){
+var dispatcher = require("../dispatcher"),
+	emitter = require("../emitter");
+
+var MessageStore = function() {
+
+	dispatcher.register(function(payload) {
+		switch (payload.type) {
+			case "CreateMessage":
+				this.createPost(payload.post);
+				break;
+		}
+	}.bind(this));
+
+	this.createPost = function(post) {
+		console.log("Creating " + JSON.stringify(post));
+		$.post('/api/discussions/' + '1' + '/messages', post);
+	}
+
+}
+
+module.exports = new MessageStore();
+},{"../dispatcher":"/Users/PJ/Jobb/Code/Elsewhere/app/dispatcher.js","../emitter":"/Users/PJ/Jobb/Code/Elsewhere/app/emitter.js"}],"/Users/PJ/Jobb/Code/Elsewhere/node_modules/event-emitter/index.js":[function(require,module,exports){
+'use strict';
+
+var d        = require('d')
+  , callable = require('es5-ext/object/valid-callable')
+
+  , apply = Function.prototype.apply, call = Function.prototype.call
+  , create = Object.create, defineProperty = Object.defineProperty
+  , defineProperties = Object.defineProperties
+  , hasOwnProperty = Object.prototype.hasOwnProperty
+  , descriptor = { configurable: true, enumerable: false, writable: true }
+
+  , on, once, off, emit, methods, descriptors, base;
+
+on = function (type, listener) {
+	var data;
+
+	callable(listener);
+
+	if (!hasOwnProperty.call(this, '__ee__')) {
+		data = descriptor.value = create(null);
+		defineProperty(this, '__ee__', descriptor);
+		descriptor.value = null;
+	} else {
+		data = this.__ee__;
+	}
+	if (!data[type]) data[type] = listener;
+	else if (typeof data[type] === 'object') data[type].push(listener);
+	else data[type] = [data[type], listener];
+
+	return this;
+};
+
+once = function (type, listener) {
+	var once, self;
+
+	callable(listener);
+	self = this;
+	on.call(this, type, once = function () {
+		off.call(self, type, once);
+		apply.call(listener, this, arguments);
+	});
+
+	once.__eeOnceListener__ = listener;
+	return this;
+};
+
+off = function (type, listener) {
+	var data, listeners, candidate, i;
+
+	callable(listener);
+
+	if (!hasOwnProperty.call(this, '__ee__')) return this;
+	data = this.__ee__;
+	if (!data[type]) return this;
+	listeners = data[type];
+
+	if (typeof listeners === 'object') {
+		for (i = 0; (candidate = listeners[i]); ++i) {
+			if ((candidate === listener) ||
+					(candidate.__eeOnceListener__ === listener)) {
+				if (listeners.length === 2) data[type] = listeners[i ? 0 : 1];
+				else listeners.splice(i, 1);
+			}
+		}
+	} else {
+		if ((listeners === listener) ||
+				(listeners.__eeOnceListener__ === listener)) {
+			delete data[type];
+		}
+	}
+
+	return this;
+};
+
+emit = function (type) {
+	var i, l, listener, listeners, args;
+
+	if (!hasOwnProperty.call(this, '__ee__')) return;
+	listeners = this.__ee__[type];
+	if (!listeners) return;
+
+	if (typeof listeners === 'object') {
+		l = arguments.length;
+		args = new Array(l - 1);
+		for (i = 1; i < l; ++i) args[i - 1] = arguments[i];
+
+		listeners = listeners.slice();
+		for (i = 0; (listener = listeners[i]); ++i) {
+			apply.call(listener, this, args);
+		}
+	} else {
+		switch (arguments.length) {
+		case 1:
+			call.call(listeners, this);
+			break;
+		case 2:
+			call.call(listeners, this, arguments[1]);
+			break;
+		case 3:
+			call.call(listeners, this, arguments[1], arguments[2]);
+			break;
+		default:
+			l = arguments.length;
+			args = new Array(l - 1);
+			for (i = 1; i < l; ++i) {
+				args[i - 1] = arguments[i];
+			}
+			apply.call(listeners, this, args);
+		}
+	}
+};
+
+methods = {
+	on: on,
+	once: once,
+	off: off,
+	emit: emit
+};
+
+descriptors = {
+	on: d(on),
+	once: d(once),
+	off: d(off),
+	emit: d(emit)
+};
+
+base = defineProperties({}, descriptors);
+
+module.exports = exports = function (o) {
+	return (o == null) ? create(base) : defineProperties(Object(o), descriptors);
+};
+exports.methods = methods;
+
+},{"d":"/Users/PJ/Jobb/Code/Elsewhere/node_modules/event-emitter/node_modules/d/index.js","es5-ext/object/valid-callable":"/Users/PJ/Jobb/Code/Elsewhere/node_modules/event-emitter/node_modules/es5-ext/object/valid-callable.js"}],"/Users/PJ/Jobb/Code/Elsewhere/node_modules/event-emitter/node_modules/d/index.js":[function(require,module,exports){
+'use strict';
+
+var assign        = require('es5-ext/object/assign')
+  , normalizeOpts = require('es5-ext/object/normalize-options')
+  , isCallable    = require('es5-ext/object/is-callable')
+  , contains      = require('es5-ext/string/#/contains')
+
+  , d;
+
+d = module.exports = function (dscr, value/*, options*/) {
+	var c, e, w, options, desc;
+	if ((arguments.length < 2) || (typeof dscr !== 'string')) {
+		options = value;
+		value = dscr;
+		dscr = null;
+	} else {
+		options = arguments[2];
+	}
+	if (dscr == null) {
+		c = w = true;
+		e = false;
+	} else {
+		c = contains.call(dscr, 'c');
+		e = contains.call(dscr, 'e');
+		w = contains.call(dscr, 'w');
+	}
+
+	desc = { value: value, configurable: c, enumerable: e, writable: w };
+	return !options ? desc : assign(normalizeOpts(options), desc);
+};
+
+d.gs = function (dscr, get, set/*, options*/) {
+	var c, e, options, desc;
+	if (typeof dscr !== 'string') {
+		options = set;
+		set = get;
+		get = dscr;
+		dscr = null;
+	} else {
+		options = arguments[3];
+	}
+	if (get == null) {
+		get = undefined;
+	} else if (!isCallable(get)) {
+		options = get;
+		get = set = undefined;
+	} else if (set == null) {
+		set = undefined;
+	} else if (!isCallable(set)) {
+		options = set;
+		set = undefined;
+	}
+	if (dscr == null) {
+		c = true;
+		e = false;
+	} else {
+		c = contains.call(dscr, 'c');
+		e = contains.call(dscr, 'e');
+	}
+
+	desc = { get: get, set: set, configurable: c, enumerable: e };
+	return !options ? desc : assign(normalizeOpts(options), desc);
+};
+
+},{"es5-ext/object/assign":"/Users/PJ/Jobb/Code/Elsewhere/node_modules/event-emitter/node_modules/es5-ext/object/assign/index.js","es5-ext/object/is-callable":"/Users/PJ/Jobb/Code/Elsewhere/node_modules/event-emitter/node_modules/es5-ext/object/is-callable.js","es5-ext/object/normalize-options":"/Users/PJ/Jobb/Code/Elsewhere/node_modules/event-emitter/node_modules/es5-ext/object/normalize-options.js","es5-ext/string/#/contains":"/Users/PJ/Jobb/Code/Elsewhere/node_modules/event-emitter/node_modules/es5-ext/string/#/contains/index.js"}],"/Users/PJ/Jobb/Code/Elsewhere/node_modules/event-emitter/node_modules/es5-ext/object/assign/index.js":[function(require,module,exports){
+'use strict';
+
+module.exports = require('./is-implemented')()
+	? Object.assign
+	: require('./shim');
+
+},{"./is-implemented":"/Users/PJ/Jobb/Code/Elsewhere/node_modules/event-emitter/node_modules/es5-ext/object/assign/is-implemented.js","./shim":"/Users/PJ/Jobb/Code/Elsewhere/node_modules/event-emitter/node_modules/es5-ext/object/assign/shim.js"}],"/Users/PJ/Jobb/Code/Elsewhere/node_modules/event-emitter/node_modules/es5-ext/object/assign/is-implemented.js":[function(require,module,exports){
+'use strict';
+
+module.exports = function () {
+	var assign = Object.assign, obj;
+	if (typeof assign !== 'function') return false;
+	obj = { foo: 'raz' };
+	assign(obj, { bar: 'dwa' }, { trzy: 'trzy' });
+	return (obj.foo + obj.bar + obj.trzy) === 'razdwatrzy';
+};
+
+},{}],"/Users/PJ/Jobb/Code/Elsewhere/node_modules/event-emitter/node_modules/es5-ext/object/assign/shim.js":[function(require,module,exports){
+'use strict';
+
+var keys  = require('../keys')
+  , value = require('../valid-value')
+
+  , max = Math.max;
+
+module.exports = function (dest, src/*, …srcn*/) {
+	var error, i, l = max(arguments.length, 2), assign;
+	dest = Object(value(dest));
+	assign = function (key) {
+		try { dest[key] = src[key]; } catch (e) {
+			if (!error) error = e;
+		}
+	};
+	for (i = 1; i < l; ++i) {
+		src = arguments[i];
+		keys(src).forEach(assign);
+	}
+	if (error !== undefined) throw error;
+	return dest;
+};
+
+},{"../keys":"/Users/PJ/Jobb/Code/Elsewhere/node_modules/event-emitter/node_modules/es5-ext/object/keys/index.js","../valid-value":"/Users/PJ/Jobb/Code/Elsewhere/node_modules/event-emitter/node_modules/es5-ext/object/valid-value.js"}],"/Users/PJ/Jobb/Code/Elsewhere/node_modules/event-emitter/node_modules/es5-ext/object/is-callable.js":[function(require,module,exports){
+// Deprecated
+
+'use strict';
+
+module.exports = function (obj) { return typeof obj === 'function'; };
+
+},{}],"/Users/PJ/Jobb/Code/Elsewhere/node_modules/event-emitter/node_modules/es5-ext/object/keys/index.js":[function(require,module,exports){
+'use strict';
+
+module.exports = require('./is-implemented')()
+	? Object.keys
+	: require('./shim');
+
+},{"./is-implemented":"/Users/PJ/Jobb/Code/Elsewhere/node_modules/event-emitter/node_modules/es5-ext/object/keys/is-implemented.js","./shim":"/Users/PJ/Jobb/Code/Elsewhere/node_modules/event-emitter/node_modules/es5-ext/object/keys/shim.js"}],"/Users/PJ/Jobb/Code/Elsewhere/node_modules/event-emitter/node_modules/es5-ext/object/keys/is-implemented.js":[function(require,module,exports){
+'use strict';
+
+module.exports = function () {
+	try {
+		Object.keys('primitive');
+		return true;
+	} catch (e) { return false; }
+};
+
+},{}],"/Users/PJ/Jobb/Code/Elsewhere/node_modules/event-emitter/node_modules/es5-ext/object/keys/shim.js":[function(require,module,exports){
+'use strict';
+
+var keys = Object.keys;
+
+module.exports = function (object) {
+	return keys(object == null ? object : Object(object));
+};
+
+},{}],"/Users/PJ/Jobb/Code/Elsewhere/node_modules/event-emitter/node_modules/es5-ext/object/normalize-options.js":[function(require,module,exports){
+'use strict';
+
+var forEach = Array.prototype.forEach, create = Object.create;
+
+var process = function (src, obj) {
+	var key;
+	for (key in src) obj[key] = src[key];
+};
+
+module.exports = function (options/*, …options*/) {
+	var result = create(null);
+	forEach.call(arguments, function (options) {
+		if (options == null) return;
+		process(Object(options), result);
+	});
+	return result;
+};
+
+},{}],"/Users/PJ/Jobb/Code/Elsewhere/node_modules/event-emitter/node_modules/es5-ext/object/valid-callable.js":[function(require,module,exports){
+'use strict';
+
+module.exports = function (fn) {
+	if (typeof fn !== 'function') throw new TypeError(fn + " is not a function");
+	return fn;
+};
+
+},{}],"/Users/PJ/Jobb/Code/Elsewhere/node_modules/event-emitter/node_modules/es5-ext/object/valid-value.js":[function(require,module,exports){
+'use strict';
+
+module.exports = function (value) {
+	if (value == null) throw new TypeError("Cannot use null or undefined");
+	return value;
+};
+
+},{}],"/Users/PJ/Jobb/Code/Elsewhere/node_modules/event-emitter/node_modules/es5-ext/string/#/contains/index.js":[function(require,module,exports){
+'use strict';
+
+module.exports = require('./is-implemented')()
+	? String.prototype.contains
+	: require('./shim');
+
+},{"./is-implemented":"/Users/PJ/Jobb/Code/Elsewhere/node_modules/event-emitter/node_modules/es5-ext/string/#/contains/is-implemented.js","./shim":"/Users/PJ/Jobb/Code/Elsewhere/node_modules/event-emitter/node_modules/es5-ext/string/#/contains/shim.js"}],"/Users/PJ/Jobb/Code/Elsewhere/node_modules/event-emitter/node_modules/es5-ext/string/#/contains/is-implemented.js":[function(require,module,exports){
+'use strict';
+
+var str = 'razdwatrzy';
+
+module.exports = function () {
+	if (typeof str.contains !== 'function') return false;
+	return ((str.contains('dwa') === true) && (str.contains('foo') === false));
+};
+
+},{}],"/Users/PJ/Jobb/Code/Elsewhere/node_modules/event-emitter/node_modules/es5-ext/string/#/contains/shim.js":[function(require,module,exports){
+'use strict';
+
+var indexOf = String.prototype.indexOf;
+
+module.exports = function (searchString/*, position*/) {
+	return indexOf.call(this, searchString, arguments[1]) > -1;
+};
+
+},{}],"/Users/PJ/Jobb/Code/Elsewhere/node_modules/flux/index.js":[function(require,module,exports){
+/**
+ * Copyright (c) 2014-2015, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ */
+
+module.exports.Dispatcher = require('./lib/Dispatcher')
+
+},{"./lib/Dispatcher":"/Users/PJ/Jobb/Code/Elsewhere/node_modules/flux/lib/Dispatcher.js"}],"/Users/PJ/Jobb/Code/Elsewhere/node_modules/flux/lib/Dispatcher.js":[function(require,module,exports){
+/*
+ * Copyright (c) 2014, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * @providesModule Dispatcher
+ * @typechecks
+ */
+
+"use strict";
+
+var invariant = require('./invariant');
+
+var _lastID = 1;
+var _prefix = 'ID_';
+
+/**
+ * Dispatcher is used to broadcast payloads to registered callbacks. This is
+ * different from generic pub-sub systems in two ways:
+ *
+ *   1) Callbacks are not subscribed to particular events. Every payload is
+ *      dispatched to every registered callback.
+ *   2) Callbacks can be deferred in whole or part until other callbacks have
+ *      been executed.
+ *
+ * For example, consider this hypothetical flight destination form, which
+ * selects a default city when a country is selected:
+ *
+ *   var flightDispatcher = new Dispatcher();
+ *
+ *   // Keeps track of which country is selected
+ *   var CountryStore = {country: null};
+ *
+ *   // Keeps track of which city is selected
+ *   var CityStore = {city: null};
+ *
+ *   // Keeps track of the base flight price of the selected city
+ *   var FlightPriceStore = {price: null}
+ *
+ * When a user changes the selected city, we dispatch the payload:
+ *
+ *   flightDispatcher.dispatch({
+ *     actionType: 'city-update',
+ *     selectedCity: 'paris'
+ *   });
+ *
+ * This payload is digested by `CityStore`:
+ *
+ *   flightDispatcher.register(function(payload) {
+ *     if (payload.actionType === 'city-update') {
+ *       CityStore.city = payload.selectedCity;
+ *     }
+ *   });
+ *
+ * When the user selects a country, we dispatch the payload:
+ *
+ *   flightDispatcher.dispatch({
+ *     actionType: 'country-update',
+ *     selectedCountry: 'australia'
+ *   });
+ *
+ * This payload is digested by both stores:
+ *
+ *    CountryStore.dispatchToken = flightDispatcher.register(function(payload) {
+ *     if (payload.actionType === 'country-update') {
+ *       CountryStore.country = payload.selectedCountry;
+ *     }
+ *   });
+ *
+ * When the callback to update `CountryStore` is registered, we save a reference
+ * to the returned token. Using this token with `waitFor()`, we can guarantee
+ * that `CountryStore` is updated before the callback that updates `CityStore`
+ * needs to query its data.
+ *
+ *   CityStore.dispatchToken = flightDispatcher.register(function(payload) {
+ *     if (payload.actionType === 'country-update') {
+ *       // `CountryStore.country` may not be updated.
+ *       flightDispatcher.waitFor([CountryStore.dispatchToken]);
+ *       // `CountryStore.country` is now guaranteed to be updated.
+ *
+ *       // Select the default city for the new country
+ *       CityStore.city = getDefaultCityForCountry(CountryStore.country);
+ *     }
+ *   });
+ *
+ * The usage of `waitFor()` can be chained, for example:
+ *
+ *   FlightPriceStore.dispatchToken =
+ *     flightDispatcher.register(function(payload) {
+ *       switch (payload.actionType) {
+ *         case 'country-update':
+ *           flightDispatcher.waitFor([CityStore.dispatchToken]);
+ *           FlightPriceStore.price =
+ *             getFlightPriceStore(CountryStore.country, CityStore.city);
+ *           break;
+ *
+ *         case 'city-update':
+ *           FlightPriceStore.price =
+ *             FlightPriceStore(CountryStore.country, CityStore.city);
+ *           break;
+ *     }
+ *   });
+ *
+ * The `country-update` payload will be guaranteed to invoke the stores'
+ * registered callbacks in order: `CountryStore`, `CityStore`, then
+ * `FlightPriceStore`.
+ */
+
+  function Dispatcher() {
+    this.$Dispatcher_callbacks = {};
+    this.$Dispatcher_isPending = {};
+    this.$Dispatcher_isHandled = {};
+    this.$Dispatcher_isDispatching = false;
+    this.$Dispatcher_pendingPayload = null;
+  }
+
+  /**
+   * Registers a callback to be invoked with every dispatched payload. Returns
+   * a token that can be used with `waitFor()`.
+   *
+   * @param {function} callback
+   * @return {string}
+   */
+  Dispatcher.prototype.register=function(callback) {
+    var id = _prefix + _lastID++;
+    this.$Dispatcher_callbacks[id] = callback;
+    return id;
+  };
+
+  /**
+   * Removes a callback based on its token.
+   *
+   * @param {string} id
+   */
+  Dispatcher.prototype.unregister=function(id) {
+    invariant(
+      this.$Dispatcher_callbacks[id],
+      'Dispatcher.unregister(...): `%s` does not map to a registered callback.',
+      id
+    );
+    delete this.$Dispatcher_callbacks[id];
+  };
+
+  /**
+   * Waits for the callbacks specified to be invoked before continuing execution
+   * of the current callback. This method should only be used by a callback in
+   * response to a dispatched payload.
+   *
+   * @param {array<string>} ids
+   */
+  Dispatcher.prototype.waitFor=function(ids) {
+    invariant(
+      this.$Dispatcher_isDispatching,
+      'Dispatcher.waitFor(...): Must be invoked while dispatching.'
+    );
+    for (var ii = 0; ii < ids.length; ii++) {
+      var id = ids[ii];
+      if (this.$Dispatcher_isPending[id]) {
+        invariant(
+          this.$Dispatcher_isHandled[id],
+          'Dispatcher.waitFor(...): Circular dependency detected while ' +
+          'waiting for `%s`.',
+          id
+        );
+        continue;
+      }
+      invariant(
+        this.$Dispatcher_callbacks[id],
+        'Dispatcher.waitFor(...): `%s` does not map to a registered callback.',
+        id
+      );
+      this.$Dispatcher_invokeCallback(id);
+    }
+  };
+
+  /**
+   * Dispatches a payload to all registered callbacks.
+   *
+   * @param {object} payload
+   */
+  Dispatcher.prototype.dispatch=function(payload) {
+    invariant(
+      !this.$Dispatcher_isDispatching,
+      'Dispatch.dispatch(...): Cannot dispatch in the middle of a dispatch.'
+    );
+    this.$Dispatcher_startDispatching(payload);
+    try {
+      for (var id in this.$Dispatcher_callbacks) {
+        if (this.$Dispatcher_isPending[id]) {
+          continue;
+        }
+        this.$Dispatcher_invokeCallback(id);
+      }
+    } finally {
+      this.$Dispatcher_stopDispatching();
+    }
+  };
+
+  /**
+   * Is this Dispatcher currently dispatching.
+   *
+   * @return {boolean}
+   */
+  Dispatcher.prototype.isDispatching=function() {
+    return this.$Dispatcher_isDispatching;
+  };
+
+  /**
+   * Call the callback stored with the given id. Also do some internal
+   * bookkeeping.
+   *
+   * @param {string} id
+   * @internal
+   */
+  Dispatcher.prototype.$Dispatcher_invokeCallback=function(id) {
+    this.$Dispatcher_isPending[id] = true;
+    this.$Dispatcher_callbacks[id](this.$Dispatcher_pendingPayload);
+    this.$Dispatcher_isHandled[id] = true;
+  };
+
+  /**
+   * Set up bookkeeping needed when dispatching.
+   *
+   * @param {object} payload
+   * @internal
+   */
+  Dispatcher.prototype.$Dispatcher_startDispatching=function(payload) {
+    for (var id in this.$Dispatcher_callbacks) {
+      this.$Dispatcher_isPending[id] = false;
+      this.$Dispatcher_isHandled[id] = false;
+    }
+    this.$Dispatcher_pendingPayload = payload;
+    this.$Dispatcher_isDispatching = true;
+  };
+
+  /**
+   * Clear bookkeeping used for dispatching.
+   *
+   * @internal
+   */
+  Dispatcher.prototype.$Dispatcher_stopDispatching=function() {
+    this.$Dispatcher_pendingPayload = null;
+    this.$Dispatcher_isDispatching = false;
+  };
+
+
+module.exports = Dispatcher;
+
+},{"./invariant":"/Users/PJ/Jobb/Code/Elsewhere/node_modules/flux/lib/invariant.js"}],"/Users/PJ/Jobb/Code/Elsewhere/node_modules/flux/lib/invariant.js":[function(require,module,exports){
+/**
+ * Copyright (c) 2014, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * @providesModule invariant
+ */
+
+"use strict";
+
+/**
+ * Use invariant() to assert state which your program assumes to be true.
+ *
+ * Provide sprintf-style format (only %s is supported) and arguments
+ * to provide information about what broke and what you were
+ * expecting.
+ *
+ * The invariant message will be stripped in production, but the invariant
+ * will remain to ensure logic does not differ in production.
+ */
+
+var invariant = function(condition, format, a, b, c, d, e, f) {
+  if (false) {
+    if (format === undefined) {
+      throw new Error('invariant requires an error message argument');
+    }
+  }
+
+  if (!condition) {
+    var error;
+    if (format === undefined) {
+      error = new Error(
+        'Minified exception occurred; use the non-minified dev environment ' +
+        'for the full error message and additional helpful warnings.'
+      );
+    } else {
+      var args = [a, b, c, d, e, f];
+      var argIndex = 0;
+      error = new Error(
+        'Invariant Violation: ' +
+        format.replace(/%s/g, function() { return args[argIndex++]; })
+      );
+    }
+
+    error.framesToPop = 1; // we don't care about invariant's own frame
+    throw error;
+  }
+};
+
+module.exports = invariant;
+
+},{}],"/Users/PJ/Jobb/Code/Elsewhere/node_modules/react/lib/AutoFocusMixin.js":[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
