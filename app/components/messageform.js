@@ -12,8 +12,8 @@ module.exports = React.createClass({
 		return (
 			<form className="form messageform clearfix" onSubmit={this.handleSubmit}>
 				<div className="form-group">
-					<textarea className="form-control" id="content" rows="5"/>
-					<button type="submit" className="btn btn-lg btn-default pull-right">Post</button>
+					<textarea className="form-control" id="content" rows="10"/>
+					<button type="submit" className="btn btn-default pull-right">Post</button>
 				</div>
 			</form>
 		);

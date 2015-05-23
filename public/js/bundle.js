@@ -35,10 +35,7 @@ module.exports = React.createClass({displayName: 'exports',
 	renderMessages: function() {
 		return _.map(this.state.messages, function(message) {
 			return (
-				React.DOM.div(null, 
-				MessageItem({data: message}), 
-				React.DOM.hr(null)
-				)
+				MessageItem({data: message})
 			);
 		});
 	},
@@ -90,8 +87,8 @@ module.exports = React.createClass({displayName: 'exports',
 		return (
 			React.DOM.form({className: "form messageform clearfix", onSubmit: this.handleSubmit}, 
 				React.DOM.div({className: "form-group"}, 
-					React.DOM.textarea({className: "form-control", id: "content", rows: "5"}), 
-					React.DOM.button({type: "submit", className: "btn btn-lg btn-default pull-right"}, "Post")
+					React.DOM.textarea({className: "form-control", id: "content", rows: "10"}), 
+					React.DOM.button({type: "submit", className: "btn btn-default pull-right"}, "Post")
 				)
 			)
 		);
@@ -105,8 +102,8 @@ var React = require('react');
 module.exports = React.createClass({displayName: 'exports',
 
 	render: function (){
-		return (
-			React.DOM.section({className: "messageitem"}, 
+		return ( 
+			React.DOM.section({className: "messageitem bubble"}, 
 				React.DOM.div({className: "header"}, this.props.data.author.name, " (", this.props.data.author.id, "), ", this.props.data.timestamp), 
 				React.DOM.div({className: "body"}, this.props.data.content)
 			)

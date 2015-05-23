@@ -16,10 +16,7 @@ module.exports = React.createClass({
 	renderMessages: function() {
 		return _.map(this.state.messages, function(message) {
 			return (
-				<div>
 				<MessageItem data={message} />
-				<hr/>
-				</div>
 			);
 		});
 	},
