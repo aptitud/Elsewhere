@@ -90,8 +90,8 @@ module.exports = React.createClass({displayName: 'exports',
 		return (
 			React.DOM.form({className: "form messageform clearfix", onSubmit: this.handleSubmit}, 
 				React.DOM.div({className: "form-group"}, 
-					React.DOM.textarea({className: "form-control", id: "content", rows: "10"}), 
-					React.DOM.button({type: "submit", className: "btn btn-default pull-right"}, "Post")
+					React.DOM.textarea({className: "form-control", id: "content"}), 
+					React.DOM.button({type: "submit", className: "btn pull-right"}, "Post")
 				)
 			)
 		);
