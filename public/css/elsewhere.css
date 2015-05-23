@@ -22,6 +22,16 @@ header {
 
 }
 
+.discussion {
+	padding-bottom: 60px;
+}
+
+.discussion .container {
+	max-width: 860px;
+	padding-left: 30px;
+	padding-right: 30px;
+}
+
 .messageform {
 	margin: 15px 0px 70px 0px;
 }
@@ -37,6 +47,7 @@ header {
 
 .messageform textarea:focus {
     box-shadow: 0 0 40px #9ecaed;
+    -webkit-box-shadow: 0 0 40px #9ecaed;
 }
 
 /* Small Devices, Tablets */
@@ -58,14 +69,6 @@ header {
 
 .messageform .btn:focus {
     box-shadow: 0 0 25px #9ecaed;
-}
-
-.discussion {
-	padding-bottom: 60px;
-}
-
-.discussion .container {
-	max-width: 800px;
 }
 
 .messageitem {
