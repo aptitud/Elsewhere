@@ -16,6 +16,12 @@ body {
 	margin: 15px 0px 70px 0px;
 }
 
+.messageform textarea {
+	background-color: #E83F6F;
+	border-color: #E83F6F;
+	color: #fff;
+}
+
 .messageform .btn {
 	margin-top: 15px;
 }
