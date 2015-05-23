@@ -9,8 +9,17 @@ body {
 
 header {
 	margin-top: 20px;
-	font-size: 40px;
+	font-size: 48px;
 	color: #E83F6F;
+}
+
+/* Small Devices, Tablets */
+@media only screen and (max-width : 768px) {
+
+	header {
+		font-size: 26px;
+	}
+
 }
 
 .messageform {
@@ -36,9 +45,26 @@ header {
 }
 
 .messageitem .header {
-	font-size: 0.8em;
+	font-size: 1.0em;
 	color: gray;
 }
+
+.messageitem .body {
+	font-size: 1.2em;
+}
+
+/* Small Devices, Tablets */
+@media only screen and (max-width : 768px) {
+
+	.messageitem .header {
+		font-size: 0.8em;
+	}
+
+	.messageitem .body {
+		font-size: 1.0em;
+	}
+
+}	
 
 .bubble {
 	position: relative;
@@ -47,7 +73,7 @@ header {
 	-webkit-border-radius: 20px;
 	-moz-border-radius: 20px;
 	border-radius: 20px;
-	color: #888
+	color: #B3B3B3
 }
 
 .bubble:after {
