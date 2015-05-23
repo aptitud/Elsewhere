@@ -14,5 +14,6 @@ app.set('view engine', 'handlebars');
 // Index Route
 app.get('/:id', routes.index);
 
-app.listen(4444);
-console.log('Listening on port 4444');
+var appPort = Number(process.env.PORT || 4444);
+app.listen(appPort);
+console.log('Listening on port ' + appPort);
