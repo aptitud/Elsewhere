@@ -9,7 +9,7 @@
     "watch": "watchify app/app.js -o public/js/bundle.js -v",
     "browserify": "browserify app/app.js | > public/js/bundle.js",
     "build": "npm run browserify",
-    "dev-start": "npm run watch & nodemon server.js",
+    "dev": "npm run watch & nodemon server.js",
     "start": "nodemon server.js"
   },
   "repository": {
