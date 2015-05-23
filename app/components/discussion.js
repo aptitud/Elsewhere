@@ -38,6 +38,9 @@ module.exports = React.createClass({
 	render: function (){
 		return (
 			<div>
+				<header>
+					<p className="text-center">Let's Go Chat Here</p>
+				</header>
 				<div className="discussion">
 					<div className="container">
 						<section><MessageForm handleMessage={this.handleMessage} /></section>

@@ -57,6 +57,9 @@ module.exports = React.createClass({displayName: 'exports',
 	render: function (){
 		return (
 			React.DOM.div(null, 
+				React.DOM.header(null, 
+					React.DOM.p({className: "text-center"}, "Let's Go Chat Here")
+				), 
 				React.DOM.div({className: "discussion"}, 
 					React.DOM.div({className: "container"}, 
 						React.DOM.section(null, MessageForm({handleMessage: this.handleMessage})), 

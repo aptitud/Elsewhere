@@ -7,10 +7,11 @@ body {
 	font-family: Courier New,monospace;
 }
 
-/*@font-face {
-	font-family: ‘Josefin Sans’;
-	src: url(//fonts.googleapis.com/css?family=Josefin+Sans);
-}*/
+header {
+	margin-top: 20px;
+	font-size: 40px;
+	color: #E83F6F;
+}
 
 .messageform {
 	margin: 15px 0px 70px 0px;
