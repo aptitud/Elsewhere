@@ -1,6 +1,9 @@
 {
   "name": "elsewhere-client",
   "version": "0.0.1",
+  "engines": {
+    "node": "0.10.x"
+  },
   "main": "app/app.js",
   "scripts": {
     "watch": "watchify app/app.js -o public/js/bundle.js -v",
