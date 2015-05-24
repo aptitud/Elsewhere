@@ -39,7 +39,7 @@ module.exports = React.createClass({
 		return (
 			<div>
 				<header>
-					<p className="text-center">Let's Go Chat Here</p>
+					<p className="text-center">Let's Take It Here</p>
 				</header>
 				<div className="discussion">
 					<div className="container">

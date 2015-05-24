@@ -7,7 +7,7 @@ module.exports = React.createClass({
 		return ( 
 			<form className="form-inline searchform clearfix text-center">
 				<div className="form-group">
-					<input type="text" className="form-control" placeholder="Search any discussion"/>
+					<input type="text" className="form-control" placeholder="Search any discussion..."/>
 				</div>
 			</form>
 		);

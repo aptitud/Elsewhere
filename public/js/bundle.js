@@ -58,7 +58,7 @@ module.exports = React.createClass({displayName: 'exports',
 		return (
 			React.DOM.div(null, 
 				React.DOM.header(null, 
-					React.DOM.p({className: "text-center"}, "Let's Go Chat Here")
+					React.DOM.p({className: "text-center"}, "Let's Take It Here")
 				), 
 				React.DOM.div({className: "discussion"}, 
 					React.DOM.div({className: "container"}, 

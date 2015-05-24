@@ -23,20 +23,52 @@ header {
 }
 
 .searchform {
-	margin-top: 150px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin: -65px 0 0 -275px;
 }
 
 .searchform input {
-	width: 400px !important;
+	background-color: #E83F6F;
+	border-color: #E83F6F;
+	color: #fff;
+    border-color: #9ecaed;
+    box-shadow: 0 0 15px #9ecaed;
+    font-size: 2.75em;
+    height: 70px !important;
+	width: 550px !important;
 }
 
 /* Small Devices, Tablets */
 @media only screen and (max-width : 768px) {
 
-	.searchform input {
-		width: 250px !important;
+	.searchform {
+		margin: -55px 0 0 -175px;
 	}
 
+	.searchform input {
+    	font-size: 1.75em;
+    	height: 55px !important;
+		width: 350px !important;
+	}
+
+}
+
+.searchform ::-webkit-input-placeholder {
+	color: #fff;
+}
+
+.searchform :-moz-placeholder {
+	color: #fff;
+}
+
+.searchform ::-moz-placeholder {
+	color: #fff;
+}
+
+.searchform :-ms-input-placeholder {
+	color: #fff;
 }
 
 .discussion {
