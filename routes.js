@@ -1,10 +1,20 @@
 var JSX = require('node-jsx').install();
 var React = require('react');
+var Search = require('./app/components/search');
 var Discussion = require('./app/components/discussion');
 
 module.exports = {
 
-	index: function (req, res) {
+	search: function (req, res) {
+
+		var markup = React.renderComponentToString(Search());
+
+		res.render('search', {
+			markup: markup
+		});
+	},
+
+	discussion: function (req, res) {
 		var id = req.params.id;
 
 		var data =  {
@@ -39,10 +49,10 @@ module.exports = {
 
 		var markup = React.renderComponentToString(Discussion({messages: data.messages}));
 
-		// Render our 'home' template
-		res.render('home', {
-			markup: markup, // Pass rendered react markup
-			state: JSON.stringify(data.messages) // Pass current state to client side
+		// Render our 'discussion' template
+		res.render('discussion', {
+			markup: markup,
+			state: JSON.stringify(data.messages)
 		});
 	}
 

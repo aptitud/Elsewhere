@@ -22,6 +22,23 @@ header {
 
 }
 
+.searchform {
+	margin-top: 150px;
+}
+
+.searchform input {
+	width: 400px !important;
+}
+
+/* Small Devices, Tablets */
+@media only screen and (max-width : 768px) {
+
+	.searchform input {
+		width: 250px !important;
+	}
+
+}
+
 .discussion {
 	padding-bottom: 60px;
 }

@@ -11,8 +11,11 @@ app.use("/", express.static(__dirname + "/public/"));
 app.engine('handlebars', exphbs({ defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
 
-// Index Route
-app.get('/:id', routes.index);
+// Search (index) Route
+app.get('/', routes.search);
+
+// Discussion Route
+app.get('/:id', routes.discussion);
 
 var appPort = Number(process.env.PORT || 4444);
 app.listen(appPort);
