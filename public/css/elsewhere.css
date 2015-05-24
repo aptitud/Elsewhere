@@ -44,13 +44,13 @@ header {
 @media only screen and (max-width : 768px) {
 
 	.searchform {
-		margin: -55px 0 0 -175px;
+		margin: -45px 0 0 -140px;
 	}
 
 	.searchform input {
-    	font-size: 1.75em;
-    	height: 55px !important;
-		width: 350px !important;
+    	font-size: 1.4em;
+    	height: 45px !important;
+		width: 280px !important;
 	}
 
 }
