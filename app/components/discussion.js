@@ -4,6 +4,7 @@ var MessageItem = require('./messageitem');
 var MessageForm = require('./messageform');
 var _ = require('underscore');
 var dispatcher = require('../dispatcher');
+var emitter = require('../emitter');
 
 module.exports = React.createClass({
 
@@ -11,6 +12,17 @@ module.exports = React.createClass({
 		return {
 			messages: this.props.messages
 		}
+	},
+
+	addMessageToState: function (message) {
+		this.state.messages.unshift(message);
+		this.setState({messages: this.state.messages});
+	},
+
+	componentWillMount: function() {
+		emitter.on("MessageCreated", function(message) {
+			this.addMessageToState(message);
+		}.bind(this));
 	},
 
 	renderMessages: function() {
@@ -30,8 +42,7 @@ module.exports = React.createClass({
 			content: content,
 			timestamp: new Date().toString()
 		};
-		this.state.messages.unshift(message);
-		this.setState({messages: this.state.messages});
+		this.addMessageToState(message);
 		dispatcher.dispatch({type: 'CreateMessage', message: message});
 	},
 

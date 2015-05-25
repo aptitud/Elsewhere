@@ -4,6 +4,7 @@ var bodyParser = require('body-parser');
 var app = express();
 var path = require('path');
 var routes = require('./routes');
+var discussion = require('./lib/discussion.js');
 
 // Set /public as our static content dir
 app.use("/", express.static(__dirname + "/public/"));
@@ -19,8 +20,13 @@ app.use(bodyParser.json())
 // Routing
 app.get('/', routes.search);
 app.get('/discussions/:id', routes.getDiscussion);
-app.post('/discussions/:id/messages', routes.createMessage);
 
 var appPort = Number(process.env.PORT || 4444);
-app.listen(appPort);
+var server = app.listen(appPort);
 console.log('Listening on port ' + appPort);
+
+// Initialize socket.io
+var io = require('socket.io').listen(server);
+io.on('connection', function (socket) {
+    discussion.connection(io, socket);
+});
