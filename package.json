@@ -17,15 +17,16 @@
     "url": "https://github.com/aptitud/Elsewhere.git"
   },
   "dependencies": {
-    "nodemon": "^1.2.1",
-    "express": "~4.9.7",
-    "express-handlebars" : "~1.1.0",
-    "react": "~0.11.2",
-    "flux": "2.0.3",
     "event-emitter": "0.3.3",
+    "express": "~4.9.7",
+    "express-handlebars": "~1.1.0",
+    "flux": "2.0.3",
     "node-jsx": "~0.11.0",
-    "underscore": "^1.6.0",
-    "request": "2.55.0"
+    "nodemon": "^1.2.1",
+    "react": "~0.11.2",
+    "request": "2.55.0",
+    "timeago": "^0.2.0",
+    "underscore": "^1.6.0"
   },
   "devDependencies": {
     "browserify": "~6.0.3",
@@ -33,8 +34,8 @@
     "uglify-js": "~2.4.15",
     "watchify": "~2.0.0"
   },
-  "browserify" : {
-    "transform" : [
+  "browserify": {
+    "transform": [
       "reactify"
     ]
   }
