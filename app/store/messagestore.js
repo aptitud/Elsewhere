@@ -1,5 +1,10 @@
 var dispatcher = require("../dispatcher"),
-	emitter = require("../emitter");
+	emitter = require("../emitter"),
+	socket = require('socket.io-client')();
+
+socket.on('connect', function(){
+	console.log("connected on client");
+});
 
 var MessageStore = function() {
 
@@ -12,9 +17,13 @@ var MessageStore = function() {
 	}.bind(this));
 
 	this.createMessage = function(message) {
-		console.log("Creating " + JSON.stringify(message));
-		$.post('/api/discussions/' + '1' + '/messages', message);
+		socket.emit('createmessage', message);
+		// TODO: If error call emit error event on emitter and make sure message is removed from GUI?
 	}
+
+	socket.on('messagecreated', function(message) {
+		emitter.emit("MessageCreated", message);
+	})
 
 }
 
