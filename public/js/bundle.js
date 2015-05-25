@@ -54,7 +54,7 @@ module.exports = React.createClass({displayName: 'exports',
 		dispatcher.dispatch({type: 'CreateMessage', message: message});
 	},
 
-	render: function (){
+	render: function(){
 		return (
 			React.DOM.div(null, 
 				React.DOM.header(null, 
@@ -136,8 +136,8 @@ var MessageStore = function() {
 	}.bind(this));
 
 	this.createMessage = function(message) {
-		console.log("Creating " + JSON.stringify(message));
-		$.post('/api/discussions/' + '1' + '/messages', message);
+		$.post('/discussions/1/messages', message);
+		// TODO: If error call error handler that removes message from GUI?
 	}
 
 }

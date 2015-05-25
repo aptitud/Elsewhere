@@ -12,8 +12,8 @@ var MessageStore = function() {
 	}.bind(this));
 
 	this.createMessage = function(message) {
-		console.log("Creating " + JSON.stringify(message));
-		$.post('/api/discussions/' + '1' + '/messages', message);
+		$.post('/discussions/1/messages', message);
+		// TODO: If error call error handler that removes message from GUI?
 	}
 
 }

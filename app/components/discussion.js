@@ -35,11 +35,11 @@ module.exports = React.createClass({
 		dispatcher.dispatch({type: 'CreateMessage', message: message});
 	},
 
-	render: function (){
+	render: function(){
 		return (
 			<div>
 				<header>
-					<p className="text-center">Let's Take It Here</p>
+					<p className="text-center">Let&#39;s Take It Here</p>
 				</header>
 				<div className="discussion">
 					<div className="container">
