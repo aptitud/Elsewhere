@@ -49,7 +49,6 @@ module.exports = {
 
 		var markup = React.renderComponentToString(Discussion({messages: data.messages}));
 
-		// Render our 'discussion' template
 		res.render('discussion', {
 			markup: markup,
 			state: JSON.stringify(data.messages)
