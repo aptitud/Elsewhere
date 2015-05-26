@@ -11,4 +11,4 @@
 1. git push heroku master (requires Heroku cli and login with Aptitud account)
 
 ## Check out online
-https://letsgochathere.herokuapp.com/1
+https://letsgochathere.herokuapp.com/discussions/1
