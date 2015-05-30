@@ -6,10 +6,6 @@
   },
   "main": "app/app.js",
   "scripts": {
-    "watch": "watchify app/app.js -o public/js/bundle.js -v",
-    "browserify": "browserify app/app.js | > public/js/bundle.js",
-    "build": "npm run browserify",
-    "dev": "npm run watch & npm run start",
     "start": "nodemon server.js"
   },
   "repository": {
