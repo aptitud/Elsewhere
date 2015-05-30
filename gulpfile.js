@@ -3,6 +3,7 @@ var browserify = require('browserify');
 var source = require('vinyl-source-stream');
 var reactify = require('reactify');
 var watchify = require('watchify');
+var nodemon = require('nodemon');
 
 var paths = {
     main_js: ['./app/app.js'],
@@ -25,4 +26,10 @@ gulp.task('browserify', function () {
 		.pipe(gulp.dest(paths.build_folder))
 });
 
-gulp.task('default', ['browserify']);
+gulp.task('start', function () {
+	nodemon({
+		script: 'server.js'
+	});
+});
+
+gulp.task('default', ['browserify', 'start']);
