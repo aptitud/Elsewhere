@@ -6,10 +6,10 @@
   },
   "main": "app/app.js",
   "scripts": {
-    "watch": "watchify app/app.js -o public/js/bundle.js -v",
-    "browserify": "browserify app/app.js | > public/js/bundle.js",
-    "build": "npm run browserify",
-    "dev": "npm run watch & npm run start",
+    //"watch": "watchify app/app.js -o public/js/bundle.js -v",
+    //"browserify": "browserify app/app.js | > public/js/bundle.js",
+    //"build": "npm run browserify",
+    //"dev": "npm run watch & npm run start",
     "start": "nodemon server.js"
   },
   "repository": {
@@ -39,10 +39,5 @@
     "watchify": "~2.0.0",
     "vinyl-source-stream": "1.1.0",
     "gulp": "3.8.11"
-  },
-  "browserify": {
-    "transform": [
-      "reactify"
-    ]
   }
 }
