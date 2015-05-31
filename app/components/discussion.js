@@ -11,7 +11,7 @@ module.exports = React.createClass({
 	getInitialState: function() {
 		return {
 			messages: this.props.messages
-		}
+		};
 	},
 
 	addMessageToState: function (message) {
@@ -66,4 +66,4 @@ module.exports = React.createClass({
 			</div>
 			);
 	}
-})
+});

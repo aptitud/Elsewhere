@@ -6,7 +6,7 @@ var React = require('react');
 var Discussion = require('./components/discussion');
 
 // Snag the initial state that was passed from the server side
-var initialState = JSON.parse(document.getElementById('initial-state').innerHTML)
+var initialState = JSON.parse(document.getElementById('initial-state').innerHTML);
 
 $(function() {
 
