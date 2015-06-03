@@ -9,7 +9,8 @@ var gulp = require('gulp'),
 	nodemon = require('nodemon'),
 	jshint = require('gulp-jshint'),
 	stylish = require('jshint-stylish'),
-	react = require('gulp-react');
+	react = require('gulp-react'),
+	git = require('gulp-git');
 
 var config = {
 	production: !!util.env.production
@@ -52,6 +53,12 @@ gulp.task('uglify', function () {
 gulp.task('start', function () {
 	nodemon({
 		script: 'server.js'
+	});
+});
+
+gulp.task('deploy', function () {
+	git.push('heroku', 'master', function (err) {
+		if (err) throw err;
 	});
 });
 

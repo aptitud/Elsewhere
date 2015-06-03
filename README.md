@@ -8,7 +8,8 @@
 
 ## To push to Heroku
 1. gulp build --production (to browserify and uglify)
-2. git push heroku master (requires Heroku cli and login with Aptitud account)
+2. git add -A && git commit -m "your message here"
+3. git push heroku master (requires Heroku cli and login with Aptitud account)
 
 ## Check out online
 https://letsgochathere.herokuapp.com/discussions/1
