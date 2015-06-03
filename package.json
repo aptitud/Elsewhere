@@ -16,29 +16,27 @@
     "event-emitter": "0.3.3",
     "express": "~4.9.7",
     "express-handlebars": "~1.1.0",
-    "body-parser" : "1.12.4",
+    "body-parser": "1.12.4",
     "react": "~0.11.2",
     "flux": "2.0.3",
     "node-jsx": "~0.11.0",
     "nodemon": "^1.2.1",
-    "react": "~0.11.2",
     "request": "2.55.0",
     "timeago": "^0.2.0",
     "underscore": "^1.6.0",
-    "socket.io" : "1.3.5",
-    "socket.io-client" : "1.3.5"
+    "socket.io": "1.3.5",
+    "socket.io-client": "1.3.5"
   },
   "devDependencies": {
     "browserify": "~6.0.3",
-    "reactify": "~0.14.0",
-    "uglify-js": "~2.4.15",
-    "watchify": "~2.0.0",
-    "vinyl-source-stream": "1.1.0",
     "gulp": "3.8.11",
+    "gulp-util": "3.0.5",
     "gulp-jshint": "1.11.0",
     "gulp-react": "3.0.1",
+    "gulp-uglify": "1.2.0",
     "jshint-stylish": "2.0.0",
-    "gulp-notify": "2.2.0",
-    "gulp-notify-growl": "1.0.2"
+    "reactify": "~0.14.0",
+    "vinyl-source-stream": "1.1.0",
+    "watchify": "~2.0.0"
   }
 }

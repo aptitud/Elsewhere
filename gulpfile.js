@@ -1,19 +1,17 @@
-var gulp = require('gulp');
-var browserify = require('browserify');
-var source = require('vinyl-source-stream');
-var reactify = require('reactify');
-var watchify = require('watchify');
-var nodemon = require('nodemon');
-var jshint = require('gulp-jshint');
-var stylish = require('jshint-stylish');
-var notify = require('gulp-notify');
-var growl = require('gulp-notify-growl');
-var react = require('gulp-react');
+var gulp = require('gulp'),
+	browserify = require('browserify'),
+	uglify = require('gulp-uglify'),
+	util = require('gulp-util'),
+	source = require('vinyl-source-stream'),
+	reactify = require('reactify'),
+	watchify = require('watchify'),
+	nodemon = require('nodemon'),
+	jshint = require('gulp-jshint'),
+	stylish = require('jshint-stylish'),
+	react = require('gulp-react');
 
-var paths = {
-    main_js: ['./app/app.js'],
-    build_js: 'bundle.js',
-    build_folder: 'public/js'
+var config = {
+	production: !!util.env.production
 };
 
 gulp.task('jshint', function () {
@@ -26,16 +24,12 @@ gulp.task('jshint', function () {
 		.pipe(jshint())
 		.pipe(jshint.reporter(stylish))
 		.pipe(jshint.reporter('fail'));
-		/*.pipe(notify({
-		    title: 'JSHint',
-		    message: 'JSHint Passed. Let it fly!',
-		}))*/
 });
 
 gulp.task('browserify', function () {
 	var bundler = browserify({
-      entries: paths.main_js,
-      debug: true,
+      entries: './app/app.js',
+      debug: true
     });
 
 	bundler = watchify(bundler);
@@ -43,8 +37,14 @@ gulp.task('browserify', function () {
 	return bundler
 		.transform(reactify)
         .bundle()
-		.pipe(source(paths.build_js))
-		.pipe(gulp.dest(paths.build_folder));
+		.pipe(source('bundle.js'))
+		.pipe(gulp.dest('public/js'));
+});
+
+gulp.task('uglify', function () {
+	return gulp.src('public/js/*.js')
+		.pipe(uglify())
+		.pipe(gulp.dest('public/js'));
 });
 
 gulp.task('start', function () {
@@ -54,3 +54,4 @@ gulp.task('start', function () {
 });
 
 gulp.task('default', ['browserify', 'start']);
+gulp.task('build', ['jshint', 'browserify', 'uglify']);
