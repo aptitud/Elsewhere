@@ -1,4 +1,4 @@
-# LetsGoChatHere
+# Let's Take It Here
 
 ## To install and run locally
 1. git clone https://github.com/aptitud/Elsewhere.git
