@@ -1,6 +1,7 @@
 var gulp = require('gulp'),
 	browserify = require('browserify'),
 	uglify = require('gulp-uglify'),
+	streamify = require('gulp-streamify'),
 	util = require('gulp-util'),
 	source = require('vinyl-source-stream'),
 	reactify = require('reactify'),
@@ -38,12 +39,13 @@ gulp.task('browserify', function () {
 		.transform(reactify)
         .bundle()
 		.pipe(source('bundle.js'))
+		.pipe(config.production ? streamify(uglify()) : util.noop())
 		.pipe(gulp.dest('public/js'));
 });
 
 gulp.task('uglify', function () {
 	return gulp.src('public/js/*.js')
-		.pipe(uglify())
+		.pipe(config.production ? uglify() : util.noop())
 		.pipe(gulp.dest('public/js'));
 });
 
@@ -53,5 +55,5 @@ gulp.task('start', function () {
 	});
 });
 
-gulp.task('default', ['browserify', 'start']);
-gulp.task('build', ['jshint', 'browserify', 'uglify']);
+gulp.task('run', ['browserify', 'start']);
+gulp.task('build', ['jshint', 'browserify']);
