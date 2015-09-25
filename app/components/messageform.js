@@ -16,7 +16,7 @@ module.exports = React.createClass({
 	},
 
   handleChange: function(e) {
-    this.setState({content: e.target.value})
+    this.setState({content: e.target.value});
   },
 
 	render: function () {

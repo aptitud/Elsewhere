@@ -30,7 +30,7 @@ module.exports = React.createClass({
 		var newElement = $(".is-new").first();
 		newElement.addClass("animation tada");
 		setTimeout(function() {
-    	newElement.removeClass("animation tada")
+    	newElement.removeClass("animation tada");
   	}, 1500);
 	},
 
