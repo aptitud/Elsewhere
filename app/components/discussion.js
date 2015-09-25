@@ -5,7 +5,7 @@ var MessageForm = require('./messageform');
 var _ = require('underscore');
 var dispatcher = require('../dispatcher');
 var emitter = require('../emitter');
-var $ = require('jQuery');
+var $ = require('jquery');
 
 module.exports = React.createClass({
 
