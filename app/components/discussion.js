@@ -5,6 +5,7 @@ var MessageForm = require('./messageform');
 var _ = require('underscore');
 var dispatcher = require('../dispatcher');
 var emitter = require('../emitter');
+var $ = require('jQuery');
 
 module.exports = React.createClass({
 
@@ -15,7 +16,7 @@ module.exports = React.createClass({
 	},
 
 	addMessageToState: function (message) {
-		this.state.messages.unshift(message);
+		this.state.messages.push(message);
 		this.setState({messages: this.state.messages});
 	},
 
@@ -25,8 +26,17 @@ module.exports = React.createClass({
 		}.bind(this));
 	},
 
+	componentDidUpdate: function() {
+		//$(".is-new").slideUp(200).delay(200).fadeIn(400);
+		$(".is-new").removeClass("is-new").addClass("animation tada");
+	},
+
 	renderMessages: function() {
-		return _.map(this.state.messages, function(message) {
+		var messages = _.sortBy(this.state.messages, function(message) {
+			return message.CreatedAt;
+		});
+		messages.reverse();
+		return _.map(messages, function(message) {
 			return (
 				<MessageItem data={message} />
 			);
@@ -35,14 +45,19 @@ module.exports = React.createClass({
 
 	handleMessage: function(content) {
 		var message = {
-			author: { 
-				id: '@_asa',
-				name: 'Åsa Liljegren'
+			Item: {
+				Channel: "Web",
+				Text: content,
+				CreatedBy: "@fake_user",
+				CreatedAt: new Date(),
+				IsNew: true
 			},
-			content: content,
-			timestamp: new Date()
+			MessageContext: {
+				Version: 1,
+				MessageType: "DiscussionItem"
+			}
 		};
-		this.addMessageToState(message);
+		this.addMessageToState(message.Item);
 		dispatcher.dispatch({type: 'CreateMessage', message: message});
 	},
 
@@ -50,7 +65,7 @@ module.exports = React.createClass({
 		return (
 			<div>
 				<header>
-					<p className="text-center">Let&#39;s Take It Here</p>
+					<p className="text-center">let&#39;s take it here &nbsp;<i className="fa fa-comment"></i></p>
 				</header>
 				<div className="discussion">
 					<div className="container">

@@ -13,7 +13,7 @@ module.exports = React.createClass({
 			<form className="form messageform clearfix" onSubmit={this.handleSubmit}>
 				<div className="form-group">
 					<textarea className="form-control" id="content"/>
-					<button type="submit" className="btn pull-right">Post</button>
+					<button type="submit" className="btn btn-lg pull-right">Post</button>
 				</div>
 			</form>
 		);
