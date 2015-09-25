@@ -4,7 +4,7 @@ var bodyParser = require('body-parser');
 var app = express();
 var path = require('path');
 var routes = require('./routes');
-var discussion = require('./lib/discussionrepository.js');
+var discussionrepository = require('./lib/discussionrepository.js');
 
 // Set /public as our static content dir
 app.use("/", express.static(__dirname + "/public/"));
@@ -28,5 +28,5 @@ console.log('Listening on port ' + appPort);
 // Initialize socket.io
 var io = require('socket.io').listen(server);
 io.on('connection', function (socket) {
-    discussion.connection(io, socket);
+    discussionrepository.connection(io, socket);
 });
