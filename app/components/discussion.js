@@ -27,8 +27,11 @@ module.exports = React.createClass({
 	},
 
 	componentDidUpdate: function() {
-		//$(".is-new").slideUp(200).delay(200).fadeIn(400);
-		$(".is-new").removeClass("is-new").addClass("animation tada");
+		var newElement = $(".is-new").first();
+		newElement.addClass("animation tada");
+		setTimeout(function() {
+    	newElement.removeClass("animation tada")
+  	}, 1500);
 	},
 
 	renderMessages: function() {

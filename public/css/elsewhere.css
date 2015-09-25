@@ -158,7 +158,7 @@ header {
 }
 
 .messageitem.is-new {
-  display: none;
+  /*display: none;*/
 }
 
 .bubble {

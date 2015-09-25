@@ -7,9 +7,11 @@ module.exports = React.createClass({
 	timeago: function (date) {
 		return (timeAgo(date));
 	},
+
 	timeFormatted: function (date) {
 		return date.toLocaleString();
 	},
+	
 	render: function (){
   	var classString = 'messageitem bubble';
 		if (this.props.data.IsNew) {
