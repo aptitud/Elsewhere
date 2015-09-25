@@ -11,13 +11,13 @@ module.exports = React.createClass({
 		return date.toLocaleString();
 	},
 	render: function (){
-		return ( 
+		return (
 			<section className="messageitem bubble">
 				<div className="header clearfix">
-					<div className="pull-left">{this.props.data.author.name} ({this.props.data.author.id})</div>
-					<div className="pull-right" title={this.timeFormatted(this.props.data.timestamp)}>{this.timeago(this.props.data.timestamp)}</div>
+					<div className="pull-left">{this.props.data.CreatedBy}</div>
+					<div className="pull-right" title={this.timeFormatted(this.props.data.CreatedAt)}>{this.timeago(this.props.data.CreatedAt)}</div>
 				</div>
-				<div className="body">{this.props.data.content}</div>
+				<div className="body">{this.props.data.Text}</div>
 			</section>
 		);
 	}

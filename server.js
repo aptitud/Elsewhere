@@ -4,7 +4,7 @@ var bodyParser = require('body-parser');
 var app = express();
 var path = require('path');
 var routes = require('./routes');
-var discussion = require('./lib/discussion.js');
+var discussion = require('./lib/discussionrepository.js');
 
 // Set /public as our static content dir
 app.use("/", express.static(__dirname + "/public/"));
@@ -13,7 +13,7 @@ app.use("/", express.static(__dirname + "/public/"));
 app.engine('handlebars', exphbs({ defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
 
-// Parse application/x-www-form-urlencoded and application/json 
+// Parse application/x-www-form-urlencoded and application/json
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
