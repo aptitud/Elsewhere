@@ -40,7 +40,7 @@ module.exports = React.createClass({
 				name: 'Åsa Liljegren'
 			},
 			content: content,
-			timestamp: new Date().toString()
+			timestamp: new Date()
 		};
 		this.addMessageToState(message);
 		dispatcher.dispatch({type: 'CreateMessage', message: message});
